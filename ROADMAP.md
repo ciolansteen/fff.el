@@ -47,7 +47,9 @@ uint32_t    fff_search_result_get_count(const FffSearchResult* r);
 uint32_t    fff_grep_result_get_count(const FffGrepResult* r);
 ```
 Elisp apelează funcții în loc să facă pointer arithmetic → zero dependență de layout.
-PR către `dmtrKovalenko/fff.nvim` (schimbare în `fff-c`, nu în `fff.nvim`).
+Sunt **două PR-uri în ordine**:
+- **PR 1 → `dmtrKovalenko/fff.nvim`** — getter functions în `crates/fff-c` (C API upstream)
+- **PR 2 → `JonasThowsen/fff.el`** — `emacs/fff.el` folosește getterii (depinde de PR 1 mersat)
 
 **Opțiunea B — Generare automată offseturi via cbindgen**
 
@@ -58,9 +60,9 @@ Mai fragil decât A, dar nu necesită modificări upstream.
 **Decizie: Opțiunea A** — mai curată, mai sigură, merit să fie în upstream.
 
 - [ ] Implementat getter functions în `crates/fff-c/src/lib.rs`
-- [ ] PR către `dmtrKovalenko/fff.nvim`
+- [ ] **PR 1** → `dmtrKovalenko/fff.nvim` cu getter functions
 - [ ] Updatat `emacs/fff.el` să folosească getteri în loc de offsets
-- [ ] PR către `JonasThowsen/fff.el` cu fix-ul (codul e al lui, fix-ul îi aparține)
+- [ ] **PR 2** → `JonasThowsen/fff.el` cu fix-ul (codul e al lui, trimitem înapoi)
 
 ---
 
