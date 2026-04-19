@@ -59,10 +59,31 @@ Mai fragil decât A, dar nu necesită modificări upstream.
 
 **Decizie: Opțiunea A** — mai curată, mai sigură, merit să fie în upstream.
 
-- [ ] Implementat getter functions în `crates/fff-c/src/lib.rs`
-- [ ] **PR 1** → `dmtrKovalenko/fff.nvim` cu getter functions
-- [ ] Updatat `emacs/fff.el` să folosească getteri în loc de offsets
-- [ ] **PR 2** → `JonasThowsen/fff.el` cu fix-ul (codul e al lui, trimitem înapoi)
+**Workflow convenit:**
+1. Implementăm în `dev` pe fork-ul nostru (`git.ciolan.net/github-mirrors/fff.nvim`)
+2. Updatăm `fff.el` în `dev` pe `git.ciolan.net/github-mirrors/fff.el`
+3. Testăm end-to-end în Emacs (file search + grep — verificăm line_content/line_number/col)
+4. Push în `main` pe GitHub (`ciolansteen/fff.nvim` + `ciolansteen/fff.el`)
+5. PR 1 → Kovalenko (fff-c getters, framing: "fff beyond Neovim")
+6. PR 2 → Jonas cu referință la PR 1 + nota că fork-ul nostru e fallback dacă PR 1 nu e mersat
+
+**PR descriptions draft**: salvate în sesiunea Copilot CLI 083b4aaa
+
+**Offset-uri deja greșite în codul lui Jonas vs struct actual:**
+
+| Ce citește Jonas | Offset hardcodat | Ce e de fapt acolo |
+|---|---|---|
+| `line_content` | 32 | `FffMatchRange*` (pointer la struct!) |
+| `line_number` | 104 | `byte_offset` |
+| `col` | 120 | `context_before_count` |
+
+Offseturi corecte acum: `line_content`@24, `line_number`@96, `col`@112 — **deja broken, nu doar risc viitor**.
+
+- [ ] Implementat getter functions în `crates/fff-c/src/lib.rs` (branch `dev`, fork fff.nvim)
+- [ ] Updatat `emacs/fff.el` să folosească getteri în loc de offset arithmetic
+- [ ] Testat end-to-end în Emacs
+- [ ] Push main pe GitHub + **PR 1** → `dmtrKovalenko/fff.nvim`
+- [ ] **PR 2** → `JonasThowsen/fff.el` via `ciolansteen/fff.el` (cu fallback note)
 
 ---
 
